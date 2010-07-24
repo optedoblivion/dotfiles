@@ -1,5 +1,7 @@
 !!! URXVT ZENBURN !!!
-urxvt.termName: rxvt-256color
+!urxvt*font: -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+!urxvt*boldFont: -*-terminus-*-*-*-*-*-*-*-*-*-*-*-*
+urxvt.termName: xterm
 urxvt.scrollBar: false
 urxvt.saveLines: 65535
 urxvt.cursorBlink: false
