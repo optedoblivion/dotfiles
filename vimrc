@@ -1,84 +1,125 @@
-" When started as "evim", evim.vim will already have done these settings.
+""   vimrc
+
+"" When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
   finish
 endif
 
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+"" Use Vim settings, rather then Vi settings (much better!).
+"" This must be first, because it changes other options as a side effect.
+set nocompatible 
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
+"" Tabs 
+set softtabstop=4
+set shiftwidth=4
+set tabstop=4
+set expandtab
+set sta
 
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
+"" Indenting
+set ai
+set si
 
-set sw=4
+"" Scrollbars
+set sidescrolloff=2
+set numberwidth=4
 
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
+"" Windows
+set equalalways
+set splitbelow splitright
+set nu
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
+"" Highlights
+set cursorline                      " Highlights cursor row.
+"" set cursorcolumn                    " Highlights cursor column.
 
-" In many terminal emulators the mouse works just fine, thus enable it.
-set mouse=a
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%79v.*/
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
+"" Cursor
 
-" Only do this part when compiled with support for autocommands.
+
+"" Searching
+"set ignorecase                     " Ignore case when searching.
+set hlsearch                        " Highlight Search.
+set incsearch                       " Incremental Search (Search as you type).
+set smartcase                       " Ignore case when searching lowercase.
+
+"" Colors
+set t_Co=256                        " 256 Colors.
+set background=dark                 " Set dark background.
+syntax on                           " Turn syntax highlighting on.
+colorscheme zenburn                 " Set colorscheme to zenburn.
+
+"" Status Line
+"set ch=2                           " Make command line two lines high.
+set showcmd                         " 
+set ruler                           " Display ruler.
+set history=50                      " Keep 50 lines of comand line history.
+
+"" Mouse
+set mouse=a                         " Enable mouse
+behave xterm
+set selectmode=mouse
+
+"" Autocommand
 if has("autocmd")
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+    filetype plugin indent on       " Enable filetype detection; autoload lang-dep indenting.
+    augroup vimrcEx                 " Put in an autocmd group, so we can delete them easily.
+    au!
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+"    autocmd FileType html :set omnifunc=htmlcomplete#CompleteTags
+"    autocmd FileType python :set omnifunc=python complete#Complete
+"    autocmd FileType javascript :set omnifunc=javascriptcomplete#CompleteJS
+"    autocmd FileType css :set omnifunc=csscomplete#CompleteCSS
+"    autocmd FileType c :set omnifunc=ccomplete#Complete
 
 
-  autocmd FileType python set complete+=k~/.vim/pydiction-0.5/pydiction isk+=.,(
+    " For all text files set textwidth to 78 characters.
+    autocmd FileType text setlocal textwidth=78 
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
+    " Pydiction
+    autocmd FileType python set complete+=k~/.vim/pydiction-0.5/pydiction isk+=.,(
 
-  augroup END
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event
+    " handler.
+    " (happens when dropping a file on gvim).
+    "autocmd BufWrite *.{py} :call Pylint()"
+    autocmd FileType html :set filetype=xhtml "This is better.
+    autocmd BufEnter * lcd %:p:h        " Sets path to directory buffer was loaded from.
+    autocmd BufReadPost *
+                \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                \     exe "normal! g`\"" |
+                \ endif
+    augroup END
 
 else
+    set autoindent                  " Always set autoindenting on.
+endif                               " has("autocmd").
 
-  set autoindent		" always set autoindenting on
+" Line Wrapping
+set nowrap
+set linebreak
 
-endif " has("autocmd")
+"" Directories
+set backupdir=~/.vimbackup          " Set backup location.
+set backup                          " Enable backups.
 
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
+set directory=~/.vimbackup/swap     " Set swap directory.
+
+"auto
+
+"" Misc.
+set sw=4
+set backspace=indent,eol,start      " Allow backspacing over everything in insert mode.
+
+"" Diff of current buffer vs original file.
 command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
 	 	\ | wincmd p | diffthis
 
-" Set personal syntax preferences "
-set nu
-set softtabstop=4
-map <buffer> <S-e> :w<CR>:!/usr/bin/env python % <CR>
-
-" Checking python syntax "
+"" Checking python syntax "
 command Pylint :call Pylint()
 function Pylint()
 	setlocal makeprg=(echo\ '[%]';\ pylint\ %)
@@ -86,15 +127,23 @@ function Pylint()
 	silent make
         cwindow
 endfunction
-"autocmd BufWrite *.{py} :call Pylint()"
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%79v.*/
 
-map <silent> <S-r> :w<CR>:call Pylint() <CR>
+
+"" Mappings
+map <buffer> <S-r> :w<CR>:!/use/bin/env python % <CR> " Run Python file.
+map <silent> <S-t> :w<CR>:call Pylint() <CR>
 map <silent> <C-n> <Esc>:tabn<CR>
 map <silent> <C-p> <Esc>:tabp<CR>
-let NERDTreeIgnore=['\.pyc$']
-set expandtab
-set tabstop=4
-set shiftwidth=4
-:colorscheme zenburn
+map <silent> <C-z> <Esc>:undo<CR>
+map <silent> <C-y> <Esc>:redo<CR>
+map <S-Enter> O<ESC>
+map <Enter> o<ESC>
+map jj <Esc>
+nnoremap <F2> :set nonu<CR>:set foldcolumn=0<CR>
+map Q gq                            " Don't use Ex mode, use Q for formatting.
+
+
+let NERDTreeIgnore=['\.pyc$','\.svn$','\.git$']
+
+"====[EOF]===="
+
