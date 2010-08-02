@@ -1312,6 +1312,7 @@ function! s:Tlist_Window_Create()
         else
             " Open the window at the leftmost place
             let win_dir = 'topleft vertical'
+"            let win_dir = 'botright vertical'
         endif
         let win_size = g:Tlist_WinWidth
     endif

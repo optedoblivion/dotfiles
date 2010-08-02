@@ -12,7 +12,7 @@ set nocompatible
 "" Tabs 
 set softtabstop=4
 set shiftwidth=4
-set tabstop=4
+set tabstop=8
 set expandtab
 set sta
 
@@ -22,12 +22,14 @@ set si
 
 "" Scrollbars
 set sidescrolloff=2
+
+"" Line numbers
 set numberwidth=4
+set nu
 
 "" Windows
 set equalalways
 set splitbelow splitright
-set nu
 
 "" Highlights
 set cursorline                      " Highlights cursor row.
@@ -62,25 +64,31 @@ set mouse=a                         " Enable mouse
 behave xterm
 set selectmode=mouse
 
+
+"" Pydiction
+let g:pydiction_location = "~/.vim/ftplugin/pydiction-1.0/complete-dict"
+
 "" Autocommand
 if has("autocmd")
 
-    filetype plugin indent on       " Enable filetype detection; autoload lang-dep indenting.
     augroup vimrcEx                 " Put in an autocmd group, so we can delete them easily.
     au!
+    
+    filetype plugin indent on       " Enable filetype detection; autoload lang-dep indenting.
+    filetype plugin on
 
 "    autocmd FileType html :set omnifunc=htmlcomplete#CompleteTags
-"    autocmd FileType python :set omnifunc=python complete#Complete
+    autocmd FileType python :set omnifunc=pythoncomplete#Complete
+    autocmd FileType python :set textwidth=79
 "    autocmd FileType javascript :set omnifunc=javascriptcomplete#CompleteJS
 "    autocmd FileType css :set omnifunc=csscomplete#CompleteCSS
 "    autocmd FileType c :set omnifunc=ccomplete#Complete
 
-
     " For all text files set textwidth to 78 characters.
-    autocmd FileType text setlocal textwidth=78 
+    autocmd FileType text setlocal textwidth=79
 
     " Pydiction
-    autocmd FileType python set complete+=k~/.vim/pydiction-0.5/pydiction isk+=.,(
+"    autocmd FileType python set complete+=k~/.vim/pydiction-0.5/pydiction isk+=.,(
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event
@@ -106,14 +114,19 @@ set linebreak
 "" Directories
 set backupdir=~/.vimbackup          " Set backup location.
 set backup                          " Enable backups.
-
 set directory=~/.vimbackup/swap     " Set swap directory.
 
-"auto
+"" Tag Lists
+let g:Tlist_Use_Right_Window=1
+
+"" Auto-Complete
+
 
 "" Misc.
 set sw=4
 set backspace=indent,eol,start      " Allow backspacing over everything in insert mode.
+let g:clipbrdDefaultReg = "+"
+
 
 "" Diff of current buffer vs original file.
 command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
@@ -124,26 +137,40 @@ command Pylint :call Pylint()
 function Pylint()
 	setlocal makeprg=(echo\ '[%]';\ pylint\ %)
 	setlocal efm=%+P[%f],%t:\ %#%l:%m
-	silent make
-        cwindow
+    silent make
+    cwindow
+    exe "!clear"
 endfunction
 
 
 "" Mappings
-map <buffer> <S-r> :w<CR>:!/use/bin/env python % <CR> " Run Python file.
-map <silent> <S-t> :w<CR>:call Pylint() <CR>
-map <silent> <C-n> <Esc>:tabn<CR>
-map <silent> <C-p> <Esc>:tabp<CR>
 map <silent> <C-z> <Esc>:undo<CR>
 map <silent> <C-y> <Esc>:redo<CR>
+map <silent> <C-t> <Esc>:tabnew<CR>
+map <silent> <S-w> <Esc>:tabclose<CR>
+nnoremap <C-Tab> :bnext<CR>
+nnoremap <C-S-Tab> :bprevious<CR>
+nnoremap <silent> <F2> <Esc>:NERDTreeToggle<CR>
+nnoremap <silent> <F3> <Esc>:TlistToggle<CR>
+nnoremap <F4> :w<CR>:call Pylint() <CR>
+" <F5> is for pdb debugging
+nnoremap <F6> :w<CR>:!/usr/bin/env python % <CR> 
+map <F7> :TaskList <CR>
 map <S-Enter> O<ESC>
 map <Enter> o<ESC>
-map jj <Esc>
-nnoremap <F2> :set nonu<CR>:set foldcolumn=0<CR>
+imap jj <Esc>
 map Q gq                            " Don't use Ex mode, use Q for formatting.
 
+" MiniBuf Explorer
+let g:miniBufExplMapWindowNavVim = 1
+let g:miniBufExplMapWindowNavArrows = 1
+let g:miniBufExplMapCTabSwitchBufs = 1
+let g:miniBufExplModSelTarget = 1 
 
 let NERDTreeIgnore=['\.pyc$','\.svn$','\.git$']
+let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+
 
 "====[EOF]===="
 
