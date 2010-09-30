@@ -79,7 +79,7 @@ if has("autocmd")
 
 "    autocmd FileType html :set omnifunc=htmlcomplete#CompleteTags
     autocmd FileType python :set omnifunc=pythoncomplete#Complete
-    autocmd FileType python :set textwidth=79
+"    autocmd FileType python :set textwidth=79
 "    autocmd FileType javascript :set omnifunc=javascriptcomplete#CompleteJS
 "    autocmd FileType css :set omnifunc=csscomplete#CompleteCSS
 "    autocmd FileType c :set omnifunc=ccomplete#Complete
@@ -96,7 +96,7 @@ if has("autocmd")
     " (happens when dropping a file on gvim).
     "autocmd BufWrite *.{py} :call Pylint()"
     autocmd FileType html :set filetype=xhtml "This is better.
-    autocmd BufEnter * lcd %:p:h        " Sets path to directory buffer was loaded from.
+"    autocmd BufEnter * lcd %:p:h        " Sets path to directory buffer was loaded from.
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
                 \     exe "normal! g`\"" |
@@ -148,8 +148,11 @@ map <silent> <C-z> <Esc>:undo<CR>
 map <silent> <C-y> <Esc>:redo<CR>
 map <silent> <C-t> <Esc>:tabnew<CR>
 map <silent> <S-w> <Esc>:tabclose<CR>
-nnoremap <C-Tab> :bnext<CR>
-nnoremap <C-S-Tab> :bprevious<CR>
+nnoremap <C-f> <Esc>:tabfind %s<CR>
+nnoremap yy <Esc>:tabnext<CR>
+nnoremap yr <Esc>:tabprev<CR>
+nnoremap <C-A-Tab> <Esc>:bnext<CR>
+nnoremap <C-A-S-Tab> <Esc>:bprev<CR>
 nnoremap <silent> <F2> <Esc>:NERDTreeToggle<CR>
 nnoremap <silent> <F3> <Esc>:TlistToggle<CR>
 nnoremap <F4> :w<CR>:call Pylint() <CR>
