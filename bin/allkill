@@ -1,9 +1,0 @@
-#!/bin/bash
-if [ $# -ne  1 ]; then
-	echo
-	echo "Usage: $0 [pid name]"
-	echo
-else
-	i=`ps ax|grep $1|grep -v grep|awk '{ print $1 }'`
-	kill -9 $i
-fi

@@ -1,7 +1,0 @@
-#!/bin/bash
-WORKDIR=`pwd`
-
-for song in `ls`;
-do
-	echo "$WORKDIR/$song"
-done
