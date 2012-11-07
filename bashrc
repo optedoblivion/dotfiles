@@ -17,7 +17,7 @@ LIGHT_GRAY="\[\033[0;37m\]"
 DEFAULT="\[\033[0m\]"
 
 function parse_git_dirty {
-  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
+  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit, working directory clean" ]] && echo "*"
 }
 
 function parse_git_branch {
